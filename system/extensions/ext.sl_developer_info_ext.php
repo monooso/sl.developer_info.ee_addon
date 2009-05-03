@@ -2,7 +2,7 @@
 
 /**
  * @package SL Developer Info
- * @version 1.3.1
+ * @version 1.3.2
  * @author Stephen Lewis (http://www.experienceinternet.co.uk/)
  * @copyright Copyright (c) 2009, Stephen Lewis
  * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-Share Alike 3.0 Unported
@@ -17,7 +17,7 @@ if ( ! defined('EXT'))
 if ( ! defined('SL_DEVINFO_EXT_NAME'))
 {
 	define('SL_DEVINFO_EXT_NAME', 'SL Developer Info');
-	define('SL_DEVINFO_EXT_VERSION', '1.3.1');
+	define('SL_DEVINFO_EXT_VERSION', '1.3.2');
 	define('SL_DEVINFO_EXT_DOCS', 'http://www.experienceinternet.co.uk/resources/details/sl-developer-info/');
 }
 

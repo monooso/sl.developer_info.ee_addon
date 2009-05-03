@@ -2,7 +2,7 @@
 
 /**
  * @package SL Developer Info
- * @version 1.3.1
+ * @version 1.3.2
  * @author Stephen Lewis (http://experienceinternet.co.uk/)
  * @copyright Copyright (c) 2009, Stephen Lewis
  * @license http://creativecommons.org/licenses/by-sa/3.0 Creative Commons Attribution-Share Alike 3.0 Unported

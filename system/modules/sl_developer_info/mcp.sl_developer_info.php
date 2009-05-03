@@ -77,6 +77,14 @@ class Sl_developer_info_CP
 	
 	
 	/**
+	 * The site ID.
+	 * @access  private
+	 * @var     site_id
+	 */
+	var $site_id = 1;
+	
+	
+	/**
 	 * PHP4 constructor.
 	 * @see __construct
 	 */
@@ -92,11 +100,12 @@ class Sl_developer_info_CP
 	 */
 	function __construct($switch = TRUE)
 	{
-		global $IN, $LANG;
+		global $IN, $LANG, $PREFS;
 		
 		// Initialise some variables.		
 		$this->short_base_url = 'C=modules' . AMP . 'M=Sl_developer_info' . AMP;
 		$this->full_base_url 	= BASE . AMP . $this->short_base_url;
+		$this->site_id        = $PREFS->ini('site_id');
 		
 		// The module top-level navigation items.
 		$this->nav = array(
@@ -392,7 +401,7 @@ JSBLOCK;
 	 */
 	function display_globals()
 	{
-		global $DSP, $LANG, $DB, $PREFS;
+		global $DSP, $LANG, $DB;
 		
 		// Browser title.
 		$meta_title = $LANG->line('globals_meta_title');
@@ -407,12 +416,11 @@ JSBLOCK;
 		// Page heading.
 		$c .= $DSP->heading($LANG->line('globals_title'));
 		
-		// List the Global Variables.
+		// List the Global Variables.	  
 		$vars = $DB->query("SELECT variable_id, variable_name, variable_data
-			FROM exp_global_variables
-			WHERE site_id = '{$PREFS->ini('site_id')}'
-			ORDER BY variable_name
-			ASC");
+		  FROM exp_global_variables
+		  WHERE site_id = '$this->site_id'
+		  ORDER BY variable_name ASC");
 		
 		// If we have no Global Variables, display a message to that effect, and leave.
 		if ($vars->num_rows == 0)
@@ -462,7 +470,7 @@ JSBLOCK;
 	 */
 	function display_templates()
 	{
-		global $DSP, $LANG, $DB, $PREFS;
+		global $DSP, $LANG, $DB;
 		
 		// Check whether we need to jump to a page anchor. This must be done first.
 		$this->check_for_jump(BASE . '&C=modules&M=Sl_developer_info&P=templates');
@@ -483,7 +491,7 @@ JSBLOCK;
 		// List the Template Groups.
 		$groups = $DB->query("SELECT group_id, group_name, is_site_default
 			FROM exp_template_groups
-			WHERE site_id = '{$PREFS->ini('site_id')}'
+			WHERE site_id = '$this->site_id'
 			ORDER BY group_order
 			ASC");
 		
@@ -529,6 +537,8 @@ JSBLOCK;
 			$c .= $DSP->tr_c();
 			
 			// The Templates.
+			// Note: attempts to insert this directly into the SQL string throw an error in PHP4.
+			$group_id = $group['group_id'];
 			$sql = "SELECT
 				template_id,
 				template_name,
@@ -539,8 +549,8 @@ JSBLOCK;
 				allow_php,
 				php_parse_location
 				FROM exp_templates
-				WHERE group_id = '{$group['group_id']}'
-				AND site_id = '{$PREFS->ini('site_id')}'
+				WHERE group_id = '$group_id'
+				AND site_id = '$this->site_id'
 				ORDER BY template_name ASC";
 				
 			$templates = $DB->query($sql);
@@ -645,7 +655,7 @@ JSBLOCK;
 			FROM exp_categories
 			WHERE group_id = '$group_id'
 			AND parent_id = '$parent_id'
-			AND site_id = '{$PREFS->ini('site_id')}'
+			AND site_id = '$this->site_id'
 			ORDER BY cat_order ASC");
 			
 		if ($cats->num_rows > 0)
@@ -669,7 +679,7 @@ JSBLOCK;
 	 */
 	function display_weblog_category_groups($group_ids)
 	{
-		global $DB, $LANG, $DSP, $PREFS;
+		global $DB, $LANG, $DSP;
 		
 		$c = "<p><strong>" . $LANG->line('weblog_categories') . ":&nbsp;&nbsp;</strong></p>";
 		
@@ -700,10 +710,11 @@ JSBLOCK;
 			foreach ($cat_groups AS $group_id)
 			{				
 				$edit_url = BASE . AMP . 'C=admin' . AMP . 'M=blog_admin' . AMP . 'P=category_editor' . AMP . 'group_id=' . $group_id;
+				
 				$group_name = $DB->query("SELECT group_name
 					FROM exp_category_groups
 					WHERE group_id = '$group_id'
-					AND site_id = '{$PREFS->ini('site_id')}'");
+					AND site_id = '$this->site_id'");
 				
 				if ($group_name->num_rows !== 1)
 				{
@@ -752,7 +763,7 @@ JSBLOCK;
 	 */
 	function display_weblog_statuses($group_id)
 	{
-		global $DB, $LANG, $DSP, $PREFS;
+		global $DB, $LANG, $DSP;
 		
 		$c = "<p><strong>" . $LANG->line('weblog_statuses') . ":&nbsp;&nbsp;</strong></p>";
 		
@@ -777,10 +788,11 @@ JSBLOCK;
 		$c .= $DSP->td('', '', '', '', 'top');
 		
 		$edit_url = BASE . AMP . 'C=admin' . AMP . 'M=blog_admin' . AMP . 'P=status_editor' . AMP . 'group_id=' . $group_id;
+		
 		$group_name = $DB->query("SELECT group_name
 			FROM exp_status_groups
 			WHERE group_id = '$group_id'
-			AND site_id = '{$PREFS->ini('site_id')}'");
+			AND site_id = '$this->site_id'");
 				
 		if ($group_name->num_rows == 1)
 		{
@@ -792,7 +804,7 @@ JSBLOCK;
 			$statuses = $DB->query("SELECT status_id, status
 				FROM exp_statuses
 				WHERE group_id = '{$group_id}'
-				AND site_id = '{$PREFS->ini('site_id')}'
+				AND site_id = '$this->site_id'
 				ORDER BY status_order ASC");			
 			
 			if ($statuses->num_rows == 0)
@@ -826,7 +838,7 @@ JSBLOCK;
 	 */
 	function display_weblogs()
 	{
-		global $DSP, $LANG, $DB, $PREFS;
+		global $DSP, $LANG, $DB;
 		
 		// Check whether we need to jump to a page anchor. This must be done first.
 		$this->check_for_jump(BASE . '&C=modules&M=Sl_developer_info&P=weblogs');
@@ -844,10 +856,10 @@ JSBLOCK;
 		// Page heading.
 		$c .= $DSP->heading($LANG->line('weblogs_title'));
 		
-		// Retrieve the Weblogs.
+		// Retrieve the Weblogs.	
 		$weblogs = $DB->query("SELECT weblog_id, blog_name, blog_title, field_group, cat_group, status_group
 			FROM exp_weblogs
-			WHERE site_id = '{$PREFS->ini('site_id')}'
+			WHERE site_id = '$this->site_id'
 			ORDER BY blog_title ASC");
 		
 		// If we have no Weblogs, display a message to that effect, and leave.
@@ -911,10 +923,13 @@ JSBLOCK;
 			$c .= $DSP->tr_c();
 			
 			// The Weblog fields.
+			// Note: attempts to insert this directly in the SQL throw an error in PHP4.
+			$group_id = $blog['field_group'];
+			
 			$fields = $DB->query("SELECT field_id, field_name, field_label, field_type, field_fmt, field_required
 				FROM exp_weblog_fields
-				WHERE group_id = '{$blog['field_group']}'
-				AND site_id = '{$PREFS->ini('site_id')}'
+				WHERE group_id = '$group_id'
+				AND site_id = '$this->site_id'
 				ORDER BY field_order ASC");
 			
 			if ($fields->num_rows == 0)
@@ -991,7 +1006,7 @@ JSBLOCK;
 	 */
 	function display_files()
 	{
-		global $DSP, $LANG, $DB, $PREFS;
+		global $DSP, $LANG, $DB;
 		
 		// Browser title.
 		$meta_title = $LANG->line('files_meta_title');
@@ -1009,7 +1024,7 @@ JSBLOCK;
 		// List the File Upload Locations.
 		$locations = $DB->query("SELECT id, name, server_path, url, allowed_types, max_size
 			FROM exp_upload_prefs
-			WHERE site_id = '{$PREFS->ini('site_id')}'
+			WHERE site_id = '$this->site_id'
 			ORDER BY id ASC");
 		
 		// If we have no File Upload Locations, display a message that effect, and leave.

@@ -2,7 +2,7 @@
 
 /**
  * @package SL Developer Info
- * @version 1.3.2
+ * @version 1.3.3
  * @author Stephen Lewis (http://experienceinternet.co.uk/)
  * @copyright Copyright (c) 2009, Stephen Lewis
  * @license http://creativecommons.org/licenses/by-sa/3.0 Creative Commons Attribution-Share Alike 3.0 Unported
@@ -12,7 +12,7 @@
 if ( ! defined('SL_DEVINFO_NAME'))
 {
 	define('SL_DEVINFO_NAME', 'SL Developer Info');
-	define('SL_DEVINFO_VERSION', '1.3.2');
+	define('SL_DEVINFO_VERSION', '1.3.3');
 	define('SL_DEVINFO_CLASS', 'Sl_developer_info');
 	
 	// Navigation constants.
@@ -883,6 +883,7 @@ JSBLOCK;
 		{
 			$edit_prefs = BASE . AMP . 'C=admin' . AMP . 'M=blog_admin' . AMP . 'P=blog_prefs' . AMP . 'weblog_id=' . $blog['weblog_id'];
 			$edit_groups = BASE . AMP . 'C=admin' . AMP . 'M=blog_admin' . AMP . 'P=group_prefs' . AMP . 'weblog_id=' . $blog['weblog_id'];
+			$edit_field_group = BASE . AMP . 'C=admin' . AMP . 'M=blog_admin' . AMP . 'P=field_editor' . AMP . 'group_id=' . $blog['field_group'];
 			
 			$c .= $DSP->table_open(array('id' => "blog-{$blog['weblog_id']}", 'class' => 'tableBorder', 'border' => '0', 'style' => 'width : 100%; margin-bottom : 2em'));
 			$c .= $DSP->tr();
@@ -894,6 +895,8 @@ JSBLOCK;
 			$c .= $DSP->anchor($edit_prefs, $LANG->line('weblog_edit_prefs'), 'style="font-weight: normal; color: #EEF4F9;"');
 			$c .= NBS . NBS . '<span style="font-weight: normal; color: #6C8494">|</span>' . NBS . NBS;
 			$c .= $DSP->anchor($edit_groups, $LANG->line('weblog_edit_groups'), 'style="font-weight: normal; color: #EEF4F9;"');
+			$c .= NBS . NBS . '<span style="font-weight: normal; color: #6C8494">|</span>' . NBS . NBS;
+			$c .= $DSP->anchor($edit_field_group, $LANG->line('weblog_edit_field_group'), 'style="font-weight: normal; color: #EEF4F9;"');
 			$c .= $DSP->td_c();
 			$c .= $DSP->tr_c();
 

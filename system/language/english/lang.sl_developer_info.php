@@ -55,6 +55,7 @@ $L = array(
 	
 	'weblog_edit_prefs'			=> "Edit Preferences",
 	'weblog_edit_groups'		=> "Edit Groups",
+	'weblog_edit_field_group' => "Edit Field Group",
 	
 	'weblog_categories'			=> "Categories",
 	'weblog_statuses'				=> "Statuses",

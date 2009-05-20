@@ -20,6 +20,7 @@ if ( ! defined('SL_DEVINFO_NAME'))
 	define('SL_DEVINFO_WEBLOGS', 1);
 	define('SL_DEVINFO_FILES', 2);
 	define('SL_DEVINFO_GLOBALS', 3);
+	define('SL_DEVINFO_PREFS', 4);
 }
 
 class Sl_developer_info_CP
@@ -128,7 +129,12 @@ class Sl_developer_info_CP
 				'page'				=> 'globals',
 				'title'				=> $LANG->line('nav_globals'),
 				'section_id'	=> SL_DEVINFO_GLOBALS
-				)
+				),
+			array(
+			  'page'        => 'prefs',
+			  'title'       => $LANG->line('nav_prefs'),
+			  'section_id'  => SL_DEVINFO_PREFS
+			  )
 			);
 			
 		// "Friendly" titles for the Template types.
@@ -176,6 +182,10 @@ class Sl_developer_info_CP
 				case 'globals':
 					$this->display_globals();
 					break;
+					
+				case 'prefs':
+				  $this->_display_prefs();
+				  break;
 					
 				case 'home':
 				default:
@@ -1088,6 +1098,85 @@ JSBLOCK;
 		$c .= $DSP->table_close();
 		
 		$this->generate_ui(SL_DEVINFO_FILES, $meta_title, $c);
+	}
+	
+	
+	/**
+	 * Renders the "PREFS object" page.
+	 * @access  private
+	 */
+	function _display_prefs()
+	{
+	  global $PREFS, $LANG, $DSP;
+	  
+	  // Browser title.
+		$meta_title = $LANG->line('prefs_meta_title');
+		
+		// Breadcrumbs.
+		$this->generate_breadcrumbs(array($LANG->line('prefs_title') => ''), FALSE, TRUE);
+		
+		// Content.
+		$c = '';
+		
+		// Page heading.
+		$c .= $DSP->heading($LANG->line('prefs_title'));
+		
+		// Create the "jump to" navigation.
+		foreach ($PREFS AS $group_id => $group_array)
+		{
+			$jump_nav[] = array('id' => 'prefs-' . $group_id, 'title' => '$PREFS->' . $group_id);
+		}
+		
+		$c .= $this->display_jump_nav($jump_nav, $this->short_base_url . 'P=prefs');
+		
+		// Loop through the properties of the $PREFS object.
+		foreach ($PREFS AS $group_id => $group_array)
+		{
+		  // Open the table.		  
+  		$c .= $DSP->table_open(array('id' => 'prefs-' . $group_id, 'class' => 'tableBorder', 'border' => '0', 'style' => 'width : 100%; margin-bottom : 1.5em;'));
+
+  		$td_style = 'tableHeading';
+  		
+  		// Main table heading.
+  		$c .= $DSP->tr();
+  		$c .= $DSP->td($td_style, '', '2') . '$PREFS->' . $group_id . $DSP->td_c();
+  		$c .= $DSP->tr_c();
+
+
+  		// Column headings.
+  		$td_style = 'tableCellOne';
+  		$c .= $DSP->tr();
+  		$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('prefs_id')));
+  		$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('prefs_value')));
+  		$c .= $DSP->tr_c();
+
+  		// Loop through the properties.
+  		$td_style = 'tableCellTwo';
+  		if (is_array($group_array) && count($group_array))
+  		{
+  		  foreach ($group_array AS $property_id => $property_value)
+    		{
+    		  $c .= $DSP->tr();
+    			$c .= $DSP->table_qcell($td_style, $property_id);
+    			$c .= $DSP->table_qcell($td_style, $property_value);
+    			$c .= $DSP->tr_c();
+    		}
+  		}
+  		else
+  		{
+  		  // No properties.
+				$c .= $DSP->tr();
+				$c .= $DSP->td($td_style, '', '2');
+				$c .= $DSP->qdiv('itemWrapper', $LANG->line('prefs_no_properties'));
+				$c .= $DSP->td_c();
+				$c .= $DSP->tr_c(); 
+  		}
+
+  		// Close the table.
+  		$c .= $DSP->table_close();
+		}
+		
+		$this->generate_ui(SL_DEVINFO_PREFS, $meta_title, $c);
 	}
 	
 	

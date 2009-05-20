@@ -17,6 +17,7 @@ $L = array(
 	'nav_weblogs'				=> "Weblogs",
 	'nav_files'					=> "File Upload Locations",
 	'nav_globals'				=> "Global Variables",
+	'nav_prefs'         => '$PREFS Object',
 	'nav_jump_to'				=> "Jump to",
 	'nav_go'						=> "Go",
 	
@@ -104,6 +105,13 @@ $L = array(
 	'globals_var_id'				=> 'ID',
 	'globals_var_name'			=> 'Name',
 	'globals_var_value'			=> 'Value',
+	
+	// PREFS
+	'prefs_meta_title'      => 'SL Developer Info : $PREFS',
+	'prefs_title'           => '$PREFS Object',
+	'prefs_id'              => "ID",
+	'prefs_value'           => "Value",
+	'prefs_no_properties'   => "There are no properties to display.",
 	
 	// All done.
 	'' => ''

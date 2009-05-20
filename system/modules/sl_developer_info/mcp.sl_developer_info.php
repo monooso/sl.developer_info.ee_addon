@@ -2,7 +2,7 @@
 
 /**
  * @package SL Developer Info
- * @version 1.3.3
+ * @version 1.4.0
  * @author Stephen Lewis (http://experienceinternet.co.uk/)
  * @copyright Copyright (c) 2009, Stephen Lewis
  * @license http://creativecommons.org/licenses/by-sa/3.0 Creative Commons Attribution-Share Alike 3.0 Unported
@@ -12,7 +12,7 @@
 if ( ! defined('SL_DEVINFO_NAME'))
 {
 	define('SL_DEVINFO_NAME', 'SL Developer Info');
-	define('SL_DEVINFO_VERSION', '1.3.3');
+	define('SL_DEVINFO_VERSION', '1.4.0');
 	define('SL_DEVINFO_CLASS', 'Sl_developer_info');
 	
 	// Navigation constants.
@@ -168,19 +168,19 @@ class Sl_developer_info_CP
 			switch ($IN->GBL('P'))
 			{
 				case 'templates':
-					$this->display_templates();
+					$this->_display_templates();
 					break;
 					
 				case 'weblogs':
-					$this->display_weblogs();
+					$this->_display_weblogs();
 					break;
 					
 				case 'files':
-					$this->display_files();
+					$this->_display_files();
 					break;
 					
 				case 'globals':
-					$this->display_globals();
+					$this->_display_globals();
 					break;
 					
 				case 'prefs':
@@ -189,7 +189,7 @@ class Sl_developer_info_CP
 					
 				case 'home':
 				default:
-					$this->display_home();
+					$this->_display_home();
 					break;
 			}
 		}
@@ -198,12 +198,13 @@ class Sl_developer_info_CP
 	
 	/**
 	 * Creates a control panel page URL.
+	 * @access  private
 	 * @param 	string 		$page 		The page name.
 	 * @param 	array 		$params 	An array of key=>value pairs to be included as parameters in the URL.
 	 * @param 	bool 			$short 		A boolean value specifying whether to use the short base URL.
 	 * @return 	string 		A string containing the full page URL.
 	 */
-	function generate_url($page = '', $params = '', $short = FALSE)
+	function _generate_url($page = '', $params = '', $short = FALSE)
 	{
 		$r = ($short === TRUE) ? $this->short_base_url : $this->full_base_url;
 		$r .= 'P=' . $page;
@@ -226,9 +227,10 @@ class Sl_developer_info_CP
 	
 	/**
 	 * Builds the module navigation.
+	 * @access  private
 	 * @param 	integer 		$section_id 		The section ID.
 	 */
-	function generate_nav($section_id = '')
+	function _generate_nav($section_id = '')
 	{
 		global $DSP, $LANG;
 		
@@ -240,7 +242,7 @@ class Sl_developer_info_CP
 		foreach ($this->nav as $s)
 		{
 			$r .= ($s['section_id'] === $section_id) ? '<div class="navPad active">' : '<div class="navPad">';
-			$r .= $DSP->anchor($this->generate_url($s['page']), $s['title'], 'title="' . $s['title'] . '"');
+			$r .= $DSP->anchor($this->_generate_url($s['page']), $s['title'], 'title="' . $s['title'] . '"');
 			$r .= '</div>';
 		}
 		
@@ -253,11 +255,12 @@ class Sl_developer_info_CP
 	
 	/**
 	 * Builds the breadcrumb navigation.
+	 * @access  private
 	 * @param 	array 		$pages 				An array of key=>url pairs to include in the breadcrumb navigation.
 	 * @param 	bool 			$underline 		A boolean value specifying whether to underline the breadcrumb navigation.
 	 * @param 	bool 			$root_link 		A boolean value specifying whether the "root" breadcrumb should be a link.
 	 */
-	function generate_breadcrumbs($pages = '', $underline = FALSE, $root_link = TRUE)
+	function _generate_breadcrumbs($pages = '', $underline = FALSE, $root_link = TRUE)
 	{
 		global $DSP, $LANG;
 		
@@ -272,10 +275,11 @@ class Sl_developer_info_CP
 	
 	/**
 	 * Builds the "right breadcrumb"; i.e. the "action" button that appears in the top-right.
+	 * @access  private
 	 * @param 	string 		$title 		The button title.
 	 * @param 	string 		$target 	The target URL.
 	 */
-	function generate_action_button($title = '', $target = '')
+	function _generate_action_button($title = '', $target = '')
 	{
 		global $DSP;
 		$DSP->right_crumb($title, $target);
@@ -284,12 +288,13 @@ class Sl_developer_info_CP
 	
 	/**
 	 * Builds the page (helper function, called by every function that generates a UI).
+	 * @access  private
 	 * @param 	integer 	$section 		The active section.
 	 * @param 	string 		$title 			The page title.
 	 * @param 	string 		$content 		The page content.
 	 * @param 	string 		$body_id An ID to add to the body element.
 	 */
-	function generate_ui($section = '', $title = '', $content = '', $body_id = '')
+	function _generate_ui($section = '', $title = '', $content = '', $body_id = '')
 	{
 		global $DSP, $LANG;
 		
@@ -305,7 +310,7 @@ class Sl_developer_info_CP
 		$DSP->body = '<table border="0" cellspacing="0" cellpadding="0" style="width : 100%;">';
 		$DSP->body .= '<tr>';
 		
-		$DSP->body .= $this->generate_nav($section);
+		$DSP->body .= $this->_generate_nav($section);
 		
 		$DSP->body .= '<td class="default" style="width : 8px;"></td>';
 		
@@ -317,12 +322,11 @@ class Sl_developer_info_CP
 	
 	/**
 	 * Adds a drop-down list "jump" navigation to the page.
-	 * @access		private
-	 * @param			array 			$items			An array of items to display in the "jump" navigation.
-	 * 																		Each item should be an array in the form array('id' => ID, 'title' => TITLE);
-	 * @param 		string			$target			The form target URL.
+	 * @access	private
+	 * @param		array 	  $items			An array of items to display in the "jump" navigation. Structure of items: array('id' => ID, 'title' => TITLE);
+	 * @param 	string	  $target			The form target URL.
 	 */	
-	function display_jump_nav($items, $target = '')
+	function _display_jump_nav($items, $target = '')
 	{
 		global $DSP, $LANG, $EXT;
 		
@@ -390,10 +394,10 @@ JSBLOCK;
 	 *
 	 * NOTE:
 	 * This should be called before echoing any data to the page, as it uses header('Location:').
-	 * @access		private
-	 * @param 		string 			$base_url 			The base URL onto which we attach the hash location.
+	 * @access	private
+	 * @param 	string 			$base_url 			The base URL onto which we attach the hash location.
 	 */
-	function check_for_jump($base_url = '')
+	function _check_for_jump($base_url = '')
 	{
 		if (( ! $base_url) OR ( ! isset($_POST['sl-devinfo-jump-to'])))
 		{
@@ -407,9 +411,9 @@ JSBLOCK;
 	
 	/**
 	 * Renders the "global variables" page.
-	 * @access		private
+	 * @access	private
 	 */
-	function display_globals()
+	function _display_globals()
 	{
 		global $DSP, $LANG, $DB;
 		
@@ -417,8 +421,8 @@ JSBLOCK;
 		$meta_title = $LANG->line('globals_meta_title');
 		
 		// Breadcrumbs.
-		$this->generate_breadcrumbs(array($LANG->line('globals_title') => ''), FALSE, TRUE);
-		$this->generate_action_button($LANG->line('globals_action_link'), BASE . AMP . 'C=templates' . AMP . 'M=global_variables');
+		$this->_generate_breadcrumbs(array($LANG->line('globals_title') => ''), FALSE, TRUE);
+		$this->_generate_action_button($LANG->line('globals_action_link'), BASE . AMP . 'C=templates' . AMP . 'M=global_variables');
 		
 		// Content.
 		$c = '';
@@ -436,7 +440,7 @@ JSBLOCK;
 		if ($vars->num_rows == 0)
 		{
 			$c .= $DSP->qdiv('itemWrapper', $LANG->line('globals_no_vars'));
-			$this->generate_ui(SL_DEVINFO_GLOBALS, $meta_title, $c);
+			$this->_generate_ui(SL_DEVINFO_GLOBALS, $meta_title, $c);
 			return;
 		}
 		
@@ -470,27 +474,27 @@ JSBLOCK;
 		// Close the table.
 		$c .= $DSP->table_close();
 		
-		$this->generate_ui(SL_DEVINFO_GLOBALS, $meta_title, $c);
+		$this->_generate_ui(SL_DEVINFO_GLOBALS, $meta_title, $c);
 	}
 	
 	
 	/**
 	 * Renders the "template information" page.
-	 * @access		private
+	 * @access	private
 	 */
-	function display_templates()
+	function _display_templates()
 	{
 		global $DSP, $LANG, $DB;
 		
 		// Check whether we need to jump to a page anchor. This must be done first.
-		$this->check_for_jump(BASE . '&C=modules&M=Sl_developer_info&P=templates');
+		$this->_check_for_jump(BASE . '&C=modules&M=Sl_developer_info&P=templates');
 		
 		// Browser title.
 		$meta_title = $LANG->line('templates_meta_title');
 		
 		// Breadcrumbs.
-		$this->generate_breadcrumbs(array($LANG->line('templates_title') => ''), FALSE, TRUE);
-		$this->generate_action_button($LANG->line('templates_action_link'), BASE . AMP . 'C=templates');
+		$this->_generate_breadcrumbs(array($LANG->line('templates_title') => ''), FALSE, TRUE);
+		$this->_generate_action_button($LANG->line('templates_action_link'), BASE . AMP . 'C=templates');
 		
 		// Content.
 		$c = '';
@@ -509,7 +513,7 @@ JSBLOCK;
 		if ($groups->num_rows == 0)
 		{
 			$c .= $DSP->qdiv('itemWrapper', $LANG->line('templates_no_groups'));
-			$this->generate_ui(SL_DEVINFO_TEMPLATES, $meta_title, $c);
+			$this->_generate_ui(SL_DEVINFO_TEMPLATES, $meta_title, $c);
 			return;
 		}
 		
@@ -519,7 +523,7 @@ JSBLOCK;
 			$jump_nav[] = array('id' => "group-{$group['group_id']}", 'title' => "{$group['group_name']}");
 		}
 		
-		$c .= $this->display_jump_nav($jump_nav, $this->short_base_url . 'P=templates');
+		$c .= $this->_display_jump_nav($jump_nav, $this->short_base_url . 'P=templates');
 		
 		// Loop through the Template Groups.
 		foreach ($groups->result AS $group)
@@ -639,18 +643,19 @@ JSBLOCK;
 			}
 		}
 		
-		$this->generate_ui(SL_DEVINFO_TEMPLATES, $meta_title, $c);
+		$this->_generate_ui(SL_DEVINFO_TEMPLATES, $meta_title, $c);
 	}
 	
 	
 	/**
 	 * Renders the categories in the specified group, with the specified parent.
-	 * @param 		string 		$group_id 		A category group ID.
-	 * @param			string 		$parent_id		A category ID (or 0).
-	 * @param 		string		$prefix				A string to place in front of the category, to indicate nesting.
-	 * @return 		string 		A content string.
+	 * @access  private
+	 * @param 	string 		$group_id 		A category group ID.
+	 * @param		string 		$parent_id		A category ID (or 0).
+	 * @param 	string		$prefix				A string to place in front of the category, to indicate nesting.
+	 * @return 	string 		A content string.
 	 */
-	function display_weblog_categories($group_id, $parent_id, $prefix)
+	function _display_weblog_categories($group_id, $parent_id, $prefix)
 	{
 		global $DB, $PREFS;
 		
@@ -674,7 +679,7 @@ JSBLOCK;
 			{
 				$c .= ($prefix != '') ? $prefix . $nested_arrow : $prefix;
 				$c .= '(ID: ' . $cat['cat_id'] . ') ' . $cat['cat_name'] . $thin_spacer . '<br />';
-				$c .= $this->display_weblog_categories($group_id, $cat['cat_id'], $prefix . $spacer);
+				$c .= $this->_display_weblog_categories($group_id, $cat['cat_id'], $prefix . $spacer);
 			}
 		}
 		
@@ -684,10 +689,11 @@ JSBLOCK;
 	
 	/**
 	 * Renders the specified category group(s). Called from display_weblogs.
-	 * @param 		string 		$group_ids 		A pipe delimited string of category group IDs.
-	 * @return 		string 		A content string.
+	 * @access  private
+	 * @param 	string 		$group_ids 		A pipe delimited string of category group IDs.
+	 * @return 	string 		A content string.
 	 */
-	function display_weblog_category_groups($group_ids)
+	function _display_weblog_category_groups($group_ids)
 	{
 		global $DB, $LANG, $DSP;
 		
@@ -741,7 +747,7 @@ JSBLOCK;
 				$c .= '<p>';
 				
 				// Display the categories for this group.
-				$cats = $this->display_weblog_categories($group_id, 0, '');				
+				$cats = $this->_display_weblog_categories($group_id, 0, '');				
 				$c .= ($cats == '') ? $LANG->line('weblog_no_categories') : $cats;
 				
 				// End of the categories for this group.
@@ -768,10 +774,11 @@ JSBLOCK;
 	
 	/**
 	 * Renders the specified status group. Called from display_weblogs.
-	 * @param 		string 		$group_id 		A status group ID.
-	 * @return 		string 		A content string.
+	 * @access  private
+	 * @param 	string 		$group_id 		A status group ID.
+	 * @return 	string 		A content string.
 	 */
-	function display_weblog_statuses($group_id)
+	function _display_weblog_statuses($group_id)
 	{
 		global $DB, $LANG, $DSP;
 		
@@ -844,21 +851,21 @@ JSBLOCK;
 	
 	/**
 	 * Renders the "weblogs information" page.
-	 * @access		private
+	 * @access	private
 	 */
-	function display_weblogs()
+	function _display_weblogs()
 	{
 		global $DSP, $LANG, $DB;
 		
 		// Check whether we need to jump to a page anchor. This must be done first.
-		$this->check_for_jump(BASE . '&C=modules&M=Sl_developer_info&P=weblogs');
+		$this->_check_for_jump(BASE . '&C=modules&M=Sl_developer_info&P=weblogs');
 		
 		// Browser title.
 		$meta_title = $LANG->line('weblogs_meta_title');
 		
 		// Breadcrumbs.
-		$this->generate_breadcrumbs(array($LANG->line('weblogs_title') => ''), FALSE, TRUE);
-		$this->generate_action_button($LANG->line('weblogs_action_link'), BASE . AMP . 'C=admin&area=weblog_administration');
+		$this->_generate_breadcrumbs(array($LANG->line('weblogs_title') => ''), FALSE, TRUE);
+		$this->_generate_action_button($LANG->line('weblogs_action_link'), BASE . AMP . 'C=admin&area=weblog_administration');
 		
 		// Content.
 		$c = '';
@@ -876,7 +883,7 @@ JSBLOCK;
 		if ($weblogs->num_rows == 0)
 		{
 			$c .= $DSP->qdiv('itemWrapper', $LANG->line('weblogs_no_weblogs'));
-			$this->generate_ui(SL_DEVINFO_WEBLOGS, $meta_title, $c);
+			$this->_generate_ui(SL_DEVINFO_WEBLOGS, $meta_title, $c);
 			return;
 		}
 		
@@ -886,7 +893,7 @@ JSBLOCK;
 			$jump_nav[] = array('id' => "blog-{$blog['weblog_id']}", 'title' => "{$blog['blog_title']} ({$blog['blog_name']})");
 		}
 		
-		$c .= $this->display_jump_nav($jump_nav, $this->short_base_url . 'P=weblogs');
+		$c .= $this->_display_jump_nav($jump_nav, $this->short_base_url . 'P=weblogs');
 		
 		// Display the Weblog information.
 		foreach ($weblogs->result AS $blog)
@@ -919,13 +926,13 @@ JSBLOCK;
 			$c .= $DSP->tr();
 			
 			$c .= $DSP->td('', '', '', '', 'top');
-			$c .= $this->display_weblog_category_groups($blog['cat_group']);
+			$c .= $this->_display_weblog_category_groups($blog['cat_group']);
 			$c .= $DSP->td_c();
 			
 			$c .= $DSP->table_qcell('', '', '50px');
 			
 			$c .= $DSP->td('', '', '', '', 'top');
-			$c .= $this->display_weblog_statuses($blog['status_group']);
+			$c .= $this->_display_weblog_statuses($blog['status_group']);
 			$c .= $DSP->td_c();
 			
 			$c .= $DSP->tr_c();
@@ -1009,15 +1016,15 @@ JSBLOCK;
 			$c .= $DSP->table_close();
 		}
 		
-		$this->generate_ui(SL_DEVINFO_WEBLOGS, $meta_title, $c);
+		$this->_generate_ui(SL_DEVINFO_WEBLOGS, $meta_title, $c);
 	}
 	
 	
 	/**
 	 * Renders the "files information" page.
-	 * @access		private
+	 * @access	private
 	 */
-	function display_files()
+	function _display_files()
 	{
 		global $DSP, $LANG, $DB;
 		
@@ -1025,8 +1032,8 @@ JSBLOCK;
 		$meta_title = $LANG->line('files_meta_title');
 		
 		// Breadcrumbs.
-		$this->generate_breadcrumbs(array($LANG->line('files_title') => ''), FALSE, TRUE);
-		$this->generate_action_button($LANG->line('files_action_link'), BASE . AMP . 'C=admin&M=blog_admin&P=upload_prefs');
+		$this->_generate_breadcrumbs(array($LANG->line('files_title') => ''), FALSE, TRUE);
+		$this->_generate_action_button($LANG->line('files_action_link'), BASE . AMP . 'C=admin&M=blog_admin&P=upload_prefs');
 		
 		// Content.
 		$c = '';
@@ -1044,7 +1051,7 @@ JSBLOCK;
 		if ($locations->num_rows == 0)
 		{
 			$c .= $DSP->qdiv('itemWrapper', $LANG->line('files_no_locations'));
-			$this->generate_ui(SL_DEVINFO_FILES, $meta_title, $c);
+			$this->_generate_ui(SL_DEVINFO_FILES, $meta_title, $c);
 			return;
 		}
 		
@@ -1097,7 +1104,7 @@ JSBLOCK;
 		// Close the table.
 		$c .= $DSP->table_close();
 		
-		$this->generate_ui(SL_DEVINFO_FILES, $meta_title, $c);
+		$this->_generate_ui(SL_DEVINFO_FILES, $meta_title, $c);
 	}
 	
 	
@@ -1113,7 +1120,7 @@ JSBLOCK;
 		$meta_title = $LANG->line('prefs_meta_title');
 		
 		// Breadcrumbs.
-		$this->generate_breadcrumbs(array($LANG->line('prefs_title') => ''), FALSE, TRUE);
+		$this->_generate_breadcrumbs(array($LANG->line('prefs_title') => ''), FALSE, TRUE);
 		
 		// Content.
 		$c = '';
@@ -1127,7 +1134,7 @@ JSBLOCK;
 			$jump_nav[] = array('id' => 'prefs-' . $group_id, 'title' => '$PREFS->' . $group_id);
 		}
 		
-		$c .= $this->display_jump_nav($jump_nav, $this->short_base_url . 'P=prefs');
+		$c .= $this->_display_jump_nav($jump_nav, $this->short_base_url . 'P=prefs');
 		
 		// Loop through the properties of the $PREFS object.
 		foreach ($PREFS AS $group_id => $group_array)
@@ -1176,15 +1183,15 @@ JSBLOCK;
   		$c .= $DSP->table_close();
 		}
 		
-		$this->generate_ui(SL_DEVINFO_PREFS, $meta_title, $c);
+		$this->_generate_ui(SL_DEVINFO_PREFS, $meta_title, $c);
 	}
 	
 	
 	/**
 	 * Renders the module home page.
-	 * @access		private
+	 * @access	private
 	 */
-	function display_home()
+	function _display_home()
 	{
 		global $DSP, $LANG;
 		
@@ -1207,7 +1214,7 @@ JSBLOCK;
 		foreach ($this->nav as $s)
 		{
 			$c .= '<li>';
-			$c .= $DSP->anchor($this->generate_url($s['page']), $s['title'], ' title="' . $s['title'] . '"');
+			$c .= $DSP->anchor($this->_generate_url($s['page']), $s['title'], ' title="' . $s['title'] . '"');
 			$c .= '</li>';
 		}
 		
@@ -1216,8 +1223,8 @@ JSBLOCK;
 		$c .= $DSP->div_c();
 			
 		// Build the UI.
-		$this->generate_breadcrumbs(array(), TRUE, FALSE);
-		$this->generate_ui(NULL, $LANG->line('home_title'), $c);
+		$this->_generate_breadcrumbs(array(), TRUE, FALSE);
+		$this->_generate_ui(NULL, $LANG->line('home_title'), $c);
 	}
 	
 	

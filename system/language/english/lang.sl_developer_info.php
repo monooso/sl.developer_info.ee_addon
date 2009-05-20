@@ -71,6 +71,7 @@ $L = array(
 	'weblog_field_type'				=> "Type",
 	'weblog_field_format'			=> "Format",
 	'weblog_field_mandatory'	=> "Mandatory?",
+	'weblog_field_gypsy'      => "Gypsy?",
 	
 	'weblog_field_type_text'			=> "Text Input",
 	'weblog_field_type_textarea'	=> "Textarea",

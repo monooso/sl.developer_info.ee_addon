@@ -908,7 +908,7 @@ JSBLOCK;
 			$c .= $blog['blog_title'] . '<br /><span style="font-weight : normal;">Short Name: ' . $blog['blog_name'] . ', Weblog ID: ' . $blog['weblog_id'] . '</span>';
 			$c .= $DSP->td_c();
 			
-			$c .= $DSP->td('tableHeading', '', '3', '', '', 'right');
+			$c .= $DSP->td('tableHeading', '', '4', '', '', 'right');
 			$c .= $DSP->anchor($edit_prefs, $LANG->line('weblog_edit_prefs'), 'style="font-weight: normal; color: #EEF4F9;"');
 			$c .= NBS . NBS . '<span style="font-weight: normal; color: #6C8494">|</span>' . NBS . NBS;
 			$c .= $DSP->anchor($edit_groups, $LANG->line('weblog_edit_groups'), 'style="font-weight: normal; color: #EEF4F9;"');
@@ -919,7 +919,7 @@ JSBLOCK;
 
 			// Categories and Statuses.
 			$c .= $DSP->tr();
-			$c .= $DSP->td('', '', '6');
+			$c .= $DSP->td('', '', '7');
 			$c .= "<div class='box' style='border-width : 0 0 1px 0; margin : 0; padding : 10px 5px'>";
 			
 			$c .= $DSP->table_open(array('border' => '0'));
@@ -945,18 +945,20 @@ JSBLOCK;
 			// The Weblog fields.
 			// Note: attempts to insert this directly in the SQL throw an error in PHP4.
 			$group_id = $blog['field_group'];
+				
+		  $sql = "SELECT field_id, field_name, field_label, field_type, field_fmt, field_required, field_is_gypsy
+      	FROM exp_weblog_fields
+      	WHERE site_id = '$this->site_id'
+      	AND (group_id = '$group_id' OR gypsy_weblogs REGEXP '[ ]{1}" . $blog['weblog_id'] . "[ ]{1}')
+      	ORDER BY field_order ASC";
 			
-			$fields = $DB->query("SELECT field_id, field_name, field_label, field_type, field_fmt, field_required
-				FROM exp_weblog_fields
-				WHERE group_id = '$group_id'
-				AND site_id = '$this->site_id'
-				ORDER BY field_order ASC");
+		  $fields = $DB->query($sql);
 			
 			if ($fields->num_rows == 0)
 			{
 				// No fields.
 				$c .= $DSP->tr();
-				$c .= $DSP->td('tableCellTwo', '', '6');
+				$c .= $DSP->td('tableCellTwo', '', '7');
 				$c .= $DSP->qdiv('itemWrapper', $LANG->line('weblog_no_fields'));
 				$c .= $DSP->td_c();
 				$c .= $DSP->tr_c();
@@ -968,11 +970,12 @@ JSBLOCK;
 				// Headings
 				$c .= $DSP->tr();
 				$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('weblog_field_id')), '5%');
-				$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('weblog_field_name')), '30%');
+				$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('weblog_field_name')), '25%');
 				$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('weblog_field_label')), '25%');
 				$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('weblog_field_type')), '15%');
 				$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('weblog_field_format')), '15%');
 				$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('weblog_field_mandatory')));
+				$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('weblog_field_gypsy')));
 				$c .= $DSP->tr_c();
 				
 				// Information for each Field.	
@@ -1006,6 +1009,9 @@ JSBLOCK;
 					
 					// Mandatory?
 					$c .= $DSP->table_qcell($td_style, ($f['field_required'] == 'y') ? $LANG->line('yes') : $LANG->line('no'));
+					
+					// Gypsy?
+					$c .= $DSP->table_qcell($td_style, ($f['field_is_gypsy'] == 'y') ? $LANG->line('yes') : $LANG->line('no'));
 					
 					// Close the table row.
 					$c .= $DSP->tr_c();

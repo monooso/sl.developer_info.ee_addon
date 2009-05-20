@@ -2,7 +2,7 @@
 
 /**
  * @package SL Developer Info
- * @version 1.4.0
+ * @version 1.4.1
  * @author Stephen Lewis (http://experienceinternet.co.uk/)
  * @copyright Copyright (c) 2009, Stephen Lewis
  * @license http://creativecommons.org/licenses/by-sa/3.0 Creative Commons Attribution-Share Alike 3.0 Unported
@@ -12,7 +12,7 @@
 if ( ! defined('SL_DEVINFO_NAME'))
 {
 	define('SL_DEVINFO_NAME', 'SL Developer Info');
-	define('SL_DEVINFO_VERSION', '1.4.0');
+	define('SL_DEVINFO_VERSION', '1.4.1');
 	define('SL_DEVINFO_CLASS', 'Sl_developer_info');
 	
 	// Navigation constants.
@@ -1149,7 +1149,6 @@ JSBLOCK;
   		$c .= $DSP->td($td_style, '', '2') . '$PREFS->' . $group_id . $DSP->td_c();
   		$c .= $DSP->tr_c();
 
-
   		// Column headings.
   		$td_style = 'tableCellOne';
   		$c .= $DSP->tr();
@@ -1161,6 +1160,9 @@ JSBLOCK;
   		$td_style = 'tableCellTwo';
   		if (is_array($group_array) && count($group_array))
   		{
+  		  // Sort the keys into alphabetical order.
+  		  ksort($group_array);
+  		  
   		  foreach ($group_array AS $property_id => $property_value)
     		{
     		  $c .= $DSP->tr();

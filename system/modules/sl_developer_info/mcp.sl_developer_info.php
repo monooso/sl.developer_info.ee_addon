@@ -1149,20 +1149,21 @@ JSBLOCK;
   		$c .= $DSP->td($td_style, '', '2') . '$PREFS->' . $group_id . $DSP->td_c();
   		$c .= $DSP->tr_c();
 
-  		// Column headings.
-  		$td_style = 'tableCellOne';
-  		$c .= $DSP->tr();
-  		$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('prefs_id')), '35%');
-  		$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('prefs_value')));
-  		$c .= $DSP->tr_c();
-
-  		// Loop through the properties.
-  		$td_style = 'tableCellTwo';
+      // Do we have information to display?
   		if (is_array($group_array) && count($group_array))
   		{
+  		  // Column headings.
+    		$td_style = 'tableCellOne';
+    		$c .= $DSP->tr();
+    		$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('prefs_id')), '35%');
+    		$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('prefs_value')));
+    		$c .= $DSP->tr_c();
+    		
   		  // Sort the keys into alphabetical order.
   		  ksort($group_array);
   		  
+  		  // Loop through the properties.
+  		  $td_style = 'tableCellTwo';
   		  foreach ($group_array AS $property_id => $property_value)
     		{
     		  $c .= $DSP->tr();
@@ -1174,6 +1175,8 @@ JSBLOCK;
   		else
   		{
   		  // No properties.
+  		  $td_style = 'tableCellTwo';
+  		  
 				$c .= $DSP->tr();
 				$c .= $DSP->td($td_style, '', '2');
 				$c .= $DSP->qdiv('itemWrapper', $LANG->line('prefs_no_properties'));

@@ -1153,7 +1153,7 @@ JSBLOCK;
   		// Column headings.
   		$td_style = 'tableCellOne';
   		$c .= $DSP->tr();
-  		$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('prefs_id')));
+  		$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('prefs_id')), '35%');
   		$c .= $DSP->table_qcell($td_style, $DSP->qdiv('defaultBold', $LANG->line('prefs_value')));
   		$c .= $DSP->tr_c();
 

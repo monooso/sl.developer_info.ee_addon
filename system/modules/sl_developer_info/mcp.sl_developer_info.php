@@ -2,7 +2,7 @@
 
 /**
  * @package SL Developer Info
- * @version 1.4.2
+ * @version 1.4.3
  * @author Stephen Lewis (http://experienceinternet.co.uk/)
  * @copyright Copyright (c) 2009, Stephen Lewis
  * @license http://creativecommons.org/licenses/by-sa/3.0 Creative Commons Attribution-Share Alike 3.0 Unported
@@ -12,7 +12,7 @@
 if ( ! defined('SL_DEVINFO_NAME'))
 {
 	define('SL_DEVINFO_NAME', 'SL Developer Info');
-	define('SL_DEVINFO_VERSION', '1.4.2');
+	define('SL_DEVINFO_VERSION', '1.4.3');
 	define('SL_DEVINFO_CLASS', 'Sl_developer_info');
 	
 	// Navigation constants.
@@ -945,12 +945,27 @@ JSBLOCK;
 			// The Weblog fields.
 			// Note: attempts to insert this directly in the SQL throw an error in PHP4.
 			$group_id = $blog['field_group'];
-				
-		  $sql = "SELECT field_id, field_name, field_label, field_type, field_fmt, field_required, field_is_gypsy
-      	FROM exp_weblog_fields
-      	WHERE site_id = '$this->site_id'
-      	AND (group_id = '$group_id' OR gypsy_weblogs REGEXP '[ ]{1}" . $blog['weblog_id'] . "[ ]{1}')
-      	ORDER BY field_order ASC";
+			
+			// Check if Gypsy is installed.
+			$gypsy_query = $DB->query("SELECT class FROM exp_extensions WHERE class = 'Gypsy' LIMIT 1");
+      $has_gypsy = ($gypsy_query->num_rows == 1);
+      
+      if ($has_gypsy)
+      {
+        $sql = "SELECT field_id, field_name, field_label, field_type, field_fmt, field_required, field_is_gypsy
+        	FROM exp_weblog_fields
+        	WHERE site_id = '$this->site_id'
+        	AND (group_id = '$group_id' OR gypsy_weblogs REGEXP '[ ]{1}" . $blog['weblog_id'] . "[ ]{1}')
+        	ORDER BY field_order ASC";
+      }
+      else
+      {
+        $sql = "SELECT field_id, field_name, field_label, field_type, field_fmt, field_required
+        	FROM exp_weblog_fields
+        	WHERE site_id = '$this->site_id'
+        	AND group_id = '$group_id'
+        	ORDER BY field_order ASC";
+      }
 			
 		  $fields = $DB->query($sql);
 			
@@ -1011,7 +1026,14 @@ JSBLOCK;
 					$c .= $DSP->table_qcell($td_style, ($f['field_required'] == 'y') ? $LANG->line('yes') : $LANG->line('no'));
 					
 					// Gypsy?
-					$c .= $DSP->table_qcell($td_style, ($f['field_is_gypsy'] == 'y') ? $LANG->line('yes') : $LANG->line('no'));
+					if ($has_gypsy)
+					{
+					  $c .= $DSP->table_qcell($td_style, ($f['field_is_gypsy'] == 'y') ? $LANG->line('yes') : $LANG->line('no'));
+					}
+					else
+					{
+					  $c .= $DSP->table_qcell($td_style, $LANG->line('no'));
+					}
 					
 					// Close the table row.
 					$c .= $DSP->tr_c();

@@ -36,4 +36,4 @@ fi
 ln -s "$addon_dir_path"/system/modules/sl_developer_info "$ee_path"/"$ee_system_folder"/modules/sl_developer_info
 ln -s "$addon_dir_path"/system/extensions/ext.sl_developer_info_ext.php "$ee_path"/"$ee_system_folder"/extensions/ext.sl_developer_info_ext.php
 ln -s "$addon_dir_path"/system/language/english/lang.sl_developer_info.php "$ee_path"/"$ee_system_folder"/language/english/lang.sl_developer_info.php
-ln -s "$addon_dir_path"/system/language/english/lang.sl_developer_info.php "$ee_path"/"$ee_system_folder"/language/english/lang.sl_developer_info_ext.php
+ln -s "$addon_dir_path"/system/language/english/lang.sl_developer_info_ext.php "$ee_path"/"$ee_system_folder"/language/english/lang.sl_developer_info_ext.php

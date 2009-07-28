@@ -79,17 +79,33 @@ class Sl_developer_info_ext {
 	{
 		global $PREFS, $DB, $REGX;
 		
-		// Retrieve the settings from the database.
+		/**
+		 * TRICKY:
+		 * LG Addon Updater (<= 1.0.2 at least) instantiates all registered extensions for
+		 * every CP page. This causes all manner of problems, as global constants like BASE
+		 * and AMP aren't set, and global objects such as $LANG don't exist.
+		 *
+		 * Cue white screen of death.
+		 *
+		 * Even fixing the LGAU bug doesn't help, as it still instantiates the extension
+		 * when the CP home page is loaded, and we have the same problem.
+		 *
+		 * The solution is to check whether certain constants exist. If so, we proceed.
+		 */
+		 
 		$settings = FALSE;
-		
-		// Retrieve the settings from the database.
-		$query = $DB->query("SELECT settings FROM exp_extensions WHERE enabled = 'y' AND class = '" . get_class($this) . "' LIMIT 1");
-		if ($query->num_rows == 1 && $query->row['settings'] != '')
-		{
-			$settings = $REGX->array_stripslashes(unserialize($query->row['settings']));
-		}
-		
-		$this->settings = $settings;
+		 
+		if (defined(BASE) && defined(AMP))
+		{		
+  		// Retrieve the settings from the database.
+  		$query = $DB->query("SELECT settings FROM exp_extensions WHERE enabled = 'y' AND class = '" . get_class($this) . "' LIMIT 1");
+  		if ($query->num_rows == 1 && $query->row['settings'] != '')
+  		{
+  			$settings = $REGX->array_stripslashes(unserialize($query->row['settings']));
+  		}
+  	}
+  	
+  	$this->settings = $settings;
 	}
 	
 	

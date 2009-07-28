@@ -1012,10 +1012,32 @@ JSBLOCK;
 					// Type.
 					if (isset($this->weblog_field_types[$f['field_type']]))
 					{
+					  // Standard field type.
 						$c .= $DSP->table_qcell($td_style, $this->weblog_field_types[$f['field_type']]);
+					}
+					elseif (strpos($f['field_type'], 'ftype_id_') !== FALSE)
+					{
+					  // FieldFrame field type.
+					  $ff_type_id = substr($f['field_type'], strlen('ftype_id_'));
+					  
+					  $db_ff_type = $DB->query('SELECT class
+					    FROM exp_ff_fieldtypes
+					    WHERE fieldtype_id = "' . $ff_type_id . '"');
+					  
+					  if ($db_ff_type->num_rows !== 1)
+					  {
+					    $field_type = ucwords($f['field_type']);
+					  }
+					  else
+					  {
+					    $field_type = $db_ff_type->row['class'];
+					  }
+					  
+					  $c .= $DSP->table_qcell($td_style, $field_type);
 					}
 					else
 					{
+					  // Unknown field type. Just do your best, we're very proud of you.
 						$c .= $DSP->table_qcell($td_style, ucwords($f['field_type']));
 					}
 					

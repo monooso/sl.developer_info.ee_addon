@@ -2,7 +2,7 @@
 
 /**
  * @package SL Developer Info
- * @version 1.4.4
+ * @version 1.4.5
  * @author Stephen Lewis (http://experienceinternet.co.uk/)
  * @copyright Copyright (c) 2009, Stephen Lewis
  * @license http://creativecommons.org/licenses/by-sa/3.0 Creative Commons Attribution-Share Alike 3.0 Unported
@@ -12,7 +12,7 @@
 if ( ! defined('SL_DEVINFO_NAME'))
 {
 	define('SL_DEVINFO_NAME', 'SL Developer Info');
-	define('SL_DEVINFO_VERSION', '1.4.4');
+	define('SL_DEVINFO_VERSION', '1.4.5');
 	define('SL_DEVINFO_CLASS', 'Sl_developer_info');
 	
 	// Navigation constants.
@@ -850,6 +850,54 @@ JSBLOCK;
 	
 	
 	/**
+	 * Determines whether Gypsy is installed.
+	 *
+	 * @access  private
+	 * @return  bool
+	 */
+	function _gypsy_installed()
+	{
+	  global $DB;
+	  
+		$db_qypsy = $DB->query("SELECT class FROM exp_extensions WHERE class = 'Gypsy' LIMIT 1");
+    return ($db_qypsy->num_rows == 1);
+	}
+	
+	
+	/**
+	 * Loads FieldFrame fieldtypes.
+	 *
+	 * @access  private
+	 * @return  array
+	 */
+	function _load_ff_fieldtypes()
+	{
+	  global $DB;
+	  
+	  $db_ff_fieldtypes = $DB->query("
+	    SELECT `fieldtype_id`, `class`
+	    FROM `exp_ff_fieldtypes`
+	    ");
+	    
+	  $return = array();
+	  foreach ($db_ff_fieldtypes->result AS $db_ft)
+	  {
+	    $class_words = explode('_', $db_ft['class']);
+	    $fieldtype_name = '';
+	    
+	    foreach ($class_words AS $class_word)
+	    {
+	      $fieldtype_name .= (strlen($class_word) == 2 ? strtoupper($class_word) : ucwords($class_word)) . ' ';
+	    }
+	    
+	    $return[$db_ft['fieldtype_id']] = trim($fieldtype_name);
+	  }
+	  
+	  return $return;
+	}
+	
+	
+	/**
 	 * Renders the "weblogs information" page.
 	 * @access	private
 	 */
@@ -894,6 +942,14 @@ JSBLOCK;
 		}
 		
 		$c .= $this->_display_jump_nav($jump_nav, $this->short_base_url . 'P=weblogs');
+		
+		/**
+		 * Be all nice and accommodating to Brandon Kelly's addons. Damn your god-like ubiquity Kelly,
+		 * we want that nice harmless Huot chap instead.
+		 */
+		
+		$has_gypsy = $this->_gypsy_installed();
+		$ff_fieldtypes = $this->_load_ff_fieldtypes();
 		
 		// Display the Weblog information.
 		foreach ($weblogs->result AS $blog)
@@ -945,10 +1001,6 @@ JSBLOCK;
 			// The Weblog fields.
 			// Note: attempts to insert this directly in the SQL throw an error in PHP4.
 			$group_id = $blog['field_group'];
-			
-			// Check if Gypsy is installed.
-			$gypsy_query = $DB->query("SELECT class FROM exp_extensions WHERE class = 'Gypsy' LIMIT 1");
-      $has_gypsy = ($gypsy_query->num_rows == 1);
       
       if ($has_gypsy)
       {
@@ -1020,17 +1072,13 @@ JSBLOCK;
 					  // FieldFrame field type.
 					  $ff_type_id = substr($f['field_type'], strlen('ftype_id_'));
 					  
-					  $db_ff_type = $DB->query('SELECT class
-					    FROM exp_ff_fieldtypes
-					    WHERE fieldtype_id = "' . $ff_type_id . '"');
-					  
-					  if ($db_ff_type->num_rows !== 1)
+					  if (array_key_exists($ff_type_id, $ff_fieldtypes))
 					  {
-					    $field_type = ucwords($f['field_type']);
+					    $field_type = $ff_fieldtypes[$ff_type_id];
 					  }
 					  else
 					  {
-					    $field_type = $db_ff_type->row['class'];
+					    $field_type = ucwords($f['field_type']);
 					  }
 					  
 					  $c .= $DSP->table_qcell($td_style, $field_type);

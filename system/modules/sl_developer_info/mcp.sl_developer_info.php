@@ -124,7 +124,7 @@ class Sl_developer_info_CP
     $this->_perform_module_checks();
 		
 		// Initialise some variables.		
-		$this->short_base_url = 'C=modules' . AMP . 'M=Sl_developer_info' . AMP;
+		$this->short_base_url = 'C=modules' . AMP . 'M=' .$this->class_name. AMP;
 		$this->full_base_url 	= BASE . AMP . $this->short_base_url;
 		$this->site_id        = $PREFS->ini('site_id');
 		
@@ -227,7 +227,7 @@ class Sl_developer_info_CP
 	{
 	  global $DB;
     
-    $db_module = $DB->query("SELECT `module_version` FROM `exp_modules` WHERE `module_name` = 'Sl_developer_info'");
+    $db_module = $DB->query("SELECT `module_version` FROM `exp_modules` WHERE `module_name` = '" .$this->class_name. "'");
     
     if ($db_module->num_rows !== 1)
     {
@@ -240,7 +240,7 @@ class Sl_developer_info_CP
       $DB->query($DB->update_string(
         'exp_modules',
         array('module_version' => $this->version),
-        "`module_name` = 'Sl_developer_info'"
+        "`module_name` = '" .$this->class_name. "'"
         ));
     }
     
@@ -1404,7 +1404,7 @@ JSBLOCK;
 		// Register the module.
 		$sql[] = $DB->insert_string('exp_modules', array(
 				'module_id'	 			=> '',
-				'module_name'			=> SL_DEVINFO_CLASS,
+				'module_name'			=> $this->class_name,
 				'module_version'	=> $this->version,
 				'has_cp_backend'	=> 'y'
 				));
@@ -1427,11 +1427,11 @@ JSBLOCK;
 		global $DB;  
 		
 		// Retrieve the module ID.
-		$mod = $DB->query("SELECT module_id FROM exp_modules WHERE module_name = '" . SL_DEVINFO_CLASS . "'");
+		$mod = $DB->query("SELECT module_id FROM exp_modules WHERE module_name = '" .$this->class_name. "'");
 		  
 		// Delete all the database records associated with this module.
 		$sql[] = "DELETE FROM exp_module_member_groups WHERE module_id = '" . $mod->row['module_id'] . "'";
-		$sql[] = "DELETE FROM exp_modules WHERE module_name = '" . SL_DEVINFO_CLASS . "'";
+		$sql[] = "DELETE FROM exp_modules WHERE module_name = '" .$this->class_name. "'";
 		
 		foreach ($sql AS $query)
 		{

@@ -16,11 +16,11 @@ if ( ! defined('SL_DEVINFO_NAME'))
 	define('SL_DEVINFO_CLASS', 'Sl_developer_info');
 	
 	// Navigation constants.
-	define('SL_DEVINFO_TEMPLATES', 0);
-	define('SL_DEVINFO_WEBLOGS', 1);
-	define('SL_DEVINFO_FILES', 2);
-	define('SL_DEVINFO_GLOBALS', 3);
-	define('SL_DEVINFO_PREFS', 4);
+	define('SL_DEVINFO_TEMPLATES', 'templates');
+	define('SL_DEVINFO_WEBLOGS', 'weblogs');
+	define('SL_DEVINFO_FILES', 'files');
+	define('SL_DEVINFO_GLOBALS', 'globals');
+	define('SL_DEVINFO_PREFS', 'prefs');
 }
 
 class Sl_developer_info_CP
@@ -279,8 +279,10 @@ class Sl_developer_info_CP
 	
 	/**
 	 * Builds the module navigation.
+	 *
 	 * @access  private
 	 * @param 	integer 		$section_id 		The section ID.
+	 * @return  string
 	 */
 	function _generate_nav($section_id = '')
 	{
@@ -307,6 +309,7 @@ class Sl_developer_info_CP
 	
 	/**
 	 * Builds the breadcrumb navigation.
+	 *
 	 * @access  private
 	 * @param 	array 		$pages 				An array of key=>url pairs to include in the breadcrumb navigation.
 	 * @param 	bool 			$underline 		A boolean value specifying whether to underline the breadcrumb navigation.
@@ -327,6 +330,7 @@ class Sl_developer_info_CP
 	
 	/**
 	 * Builds the "right breadcrumb"; i.e. the "action" button that appears in the top-right.
+	 *
 	 * @access  private
 	 * @param 	string 		$title 		The button title.
 	 * @param 	string 		$target 	The target URL.
@@ -359,24 +363,27 @@ class Sl_developer_info_CP
 		$DSP->title = $title;
 		
 		// Include the custom CSS and JavaScript.
-    $DSP->extra_header .= '<link rel="stylesheet" type="text/css" media="screen" href="modules/' .$this->class_name. '/css/sl-devinfo-mcp.css">';
+    $DSP->extra_header .= '<link rel="stylesheet" type="text/css" media="screen" href="modules/' .strtolower($this->class_name). '/css/sl-devinfo-mcp.css">';
     
     // Only include the JS if jQuery is installed.
     if (isset($EXT->version_numbers['Cp_jquery']) === TRUE OR empty($SESS->cache['scripts']['jquery']) === FALSE)
     {
-      $DSP->extra_header .= '<script type="text/javascript" src="modules/' .$this->class_name. '/js/sl-devinfo-mcp.js"></script>';
+      $DSP->extra_header .= '<script type="text/javascript" src="modules/' .strtolower($this->class_name). '/js/sl-devinfo-mcp.js"></script>';
     }
 		
 		// Build the page body.
-		$DSP->body = '<table border="0" cellspacing="0" cellpadding="0" style="width : 100%;">';
+		$DSP->body = '<table border="0" cellspacing="0" cellpadding="0" style="width : 100%;" id="';
+		$DSP->body .= ($section === '' ? 'home' : $section);
+		$DSP->body .= '">';
 		$DSP->body .= '<tr>';
 		
 		$DSP->body .= $this->_generate_nav($section);
 		
 		$DSP->body .= '<td class="default" style="width : 8px;"></td>';
 		
-		$DSP->body .= '<td valign="top">';
-		$DSP->body .= $content;					// The page content.		
+		$DSP->body .= '<td valign="top" id="sl-content-a">';
+		$DSP->body .= $this->_generate_donate_button();
+		$DSP->body .= $content;
 		$DSP->body .= '</td></tr></table>';
 	}
 	
@@ -1164,6 +1171,22 @@ class Sl_developer_info_CP
 	
 	
 	/**
+	 * Generates the HTML for the 'donate' button.
+	 *
+	 * @access  private
+	 * @return  string
+	 */
+	function _generate_donate_button()
+	{
+	  $button = '<div class="donate">';
+	  $button .= '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8592808" title="Support SL Developer Info by donating">Support SL Developer Info by Donating</a>';
+	  $button .= '</div>';
+	  
+	  return $button;
+	}
+	
+	
+	/**
 	 * Renders the "files information" page.
 	 * @access	private
 	 */
@@ -1372,7 +1395,7 @@ class Sl_developer_info_CP
 			
 		// Build the UI.
 		$this->_generate_breadcrumbs(array(), TRUE, FALSE);
-		$this->_generate_ui(NULL, $LANG->line('home_title'), $c);
+		$this->_generate_ui('', $LANG->line('home_title'), $c);
 	}
 	
 	

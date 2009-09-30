@@ -2,7 +2,7 @@
 
 /**
  * @package SL Developer Info
- * @version 1.4.5
+ * @version 1.4.6
  * @author Stephen Lewis (http://experienceinternet.co.uk/)
  * @copyright Copyright (c) 2009, Stephen Lewis
  * @license http://creativecommons.org/licenses/by-sa/3.0 Creative Commons Attribution-Share Alike 3.0 Unported
@@ -12,7 +12,7 @@
 if ( ! defined('SL_DEVINFO_NAME'))
 {
 	define('SL_DEVINFO_NAME', 'SL Developer Info');
-	define('SL_DEVINFO_VERSION', '1.4.5');
+	define('SL_DEVINFO_VERSION', '1.4.6');
 	define('SL_DEVINFO_CLASS', 'Sl_developer_info');
 	
 	// Navigation constants.
@@ -27,60 +27,77 @@ class Sl_developer_info_CP
 {
 	/**
 	 * The module version (required variable).
-	 * @var version
+	 *
+	 * @access  private
+	 * @var     string
 	 */
 	var $version = SL_DEVINFO_VERSION;
 	
 	/**
+	 * The module class name.
+	 *
+	 * @access  private
+	 * @var     string
+	 */
+	var $class_name = SL_DEVINFO_CLASS;
+	
+	/**
 	 * The short "base" used when constructing Control Panel URLs.
+	 *
 	 * @access 	private
-	 * @var 		short_base_url
+	 * @var 	  string
 	 */
 	var $short_base_url = '';
 	
 	/**
 	 * The full "base" used when constructing Control Panel URLs.
+	 *
 	 * @access	private
-	 * @var 		full_base_url
+	 * @var 		string
 	 */
 	var $full_base_url = '';
 	
 	/**
 	 * An array containing details of the module navigation.
+	 *
 	 * @access	private
-	 * @var 		nav
+	 * @var 		array
 	 */
 	var $nav = array();
 	
 	
 	/**
 	 * An array containing "friendly" titles for the Template types.
+	 *
 	 * @access	private
-	 * @var 		template_types
+	 * @var 		array
 	 */
 	var $template_types = array();
 	
 	
 	/**
 	 * An array containing "friendly" titles for the Weblog Field types.
+	 *
 	 * @access	private
-	 * @var 		weblog_field_types
+	 * @var 		array
 	 */
 	var $weblog_field_types = array();
 	
 	
 	/**
 	 * An array containing "friendly" titles for the File types.
+	 *
 	 * @access	private
-	 * @var 		file_types
+	 * @var 		array
 	 */
 	var $file_types = array();
 	
 	
 	/**
 	 * The site ID.
+	 *
 	 * @access  private
-	 * @var     site_id
+	 * @var     int
 	 */
 	var $site_id = 1;
 	
@@ -102,6 +119,9 @@ class Sl_developer_info_CP
 	function __construct($switch = TRUE)
 	{
 		global $IN, $LANG, $PREFS;
+		
+    // Pre-flight checks.
+    $this->_perform_module_checks();
 		
 		// Initialise some variables.		
 		$this->short_base_url = 'C=modules' . AMP . 'M=Sl_developer_info' . AMP;
@@ -193,6 +213,38 @@ class Sl_developer_info_CP
 					break;
 			}
 		}
+	}
+	
+	
+	/**
+	 * Performs some pre-flight checks. First, we check that the module is actually installed,
+	 * and then (assuming it is), we check that the correct version number is in the database.
+	 *
+	 * @access  private
+	 * @return  bool    A boolean value indicating whether the pre-flight checks were passed.
+	 */
+	function _perform_module_checks()
+	{
+	  global $DB;
+    
+    $db_module = $DB->query("SELECT `module_version` FROM `exp_modules` WHERE `module_name` = 'Sl_developer_info'");
+    
+    if ($db_module->num_rows !== 1)
+    {
+      return FALSE;
+    }
+    
+    // Update the version number, if required.
+    if ($db_module->row['module_version'] !== $this->version)
+    {
+      $DB->query($DB->update_string(
+        'exp_modules',
+        array('module_version' => $this->version),
+        "`module_name` = 'Sl_developer_info'"
+        ));
+    }
+    
+    return TRUE;
 	}
 	
 	
@@ -305,6 +357,9 @@ class Sl_developer_info_CP
 		
 		// Set the page title.
 		$DSP->title = $title;
+		
+		// Include the custom CSS and JavaScript.
+    $DSP->extra_header .= '<link rel="stylesheet" type="text/css" media="screen" href="modules/' .$this->class_name. '/css/sl-addon-cp.css">';
 		
 		// Build the page body.
 		$DSP->body = '<table border="0" cellspacing="0" cellpadding="0" style="width : 100%;">';
@@ -743,7 +798,7 @@ JSBLOCK;
 				$c .= $DSP->td('', '', '', '', 'top');
 				
 				// Output the category group name.
-				$c .= "<p><strong>" . $DSP->anchor($edit_url, $group_name->row['group_name']) . "</strong></p>";
+				$c .= "<p><strong>" . $DSP->anchor($edit_url, "(ID: {$group_id}) " .$group_name->row['group_name']). "</strong></p>";
 				$c .= '<p>';
 				
 				// Display the categories for this group.
@@ -874,12 +929,20 @@ JSBLOCK;
 	{
 	  global $DB;
 	  
+	  $return = array();
+	  
+    $ff_installed = $DB->query("SHOW TABLES LIKE 'exp_ff_fieldtypes'");
+      
+    if ($ff_installed->num_rows == 0)
+    {
+      return $return;
+    }
+	  
 	  $db_ff_fieldtypes = $DB->query("
 	    SELECT `fieldtype_id`, `class`
 	    FROM `exp_ff_fieldtypes`
 	    ");
-	    
-	  $return = array();
+	  
 	  foreach ($db_ff_fieldtypes->result AS $db_ft)
 	  {
 	    $class_words = explode('_', $db_ft['class']);

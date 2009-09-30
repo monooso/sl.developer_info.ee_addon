@@ -348,7 +348,7 @@ class Sl_developer_info_CP
 	 */
 	function _generate_ui($section = '', $title = '', $content = '', $body_id = '')
 	{
-		global $DSP, $LANG;
+		global $DSP, $EXT, $LANG, $SESS;
 		
 		if ($body_id !== '')
 		{
@@ -359,7 +359,13 @@ class Sl_developer_info_CP
 		$DSP->title = $title;
 		
 		// Include the custom CSS and JavaScript.
-    $DSP->extra_header .= '<link rel="stylesheet" type="text/css" media="screen" href="modules/' .$this->class_name. '/css/sl-addon-cp.css">';
+    $DSP->extra_header .= '<link rel="stylesheet" type="text/css" media="screen" href="modules/' .$this->class_name. '/css/sl-devinfo-mcp.css">';
+    
+    // Only include the JS if jQuery is installed.
+    if (isset($EXT->version_numbers['Cp_jquery']) === TRUE OR empty($SESS->cache['scripts']['jquery']) === FALSE)
+    {
+      $DSP->extra_header .= '<script type="text/javascript" src="modules/' .$this->class_name. '/js/sl-devinfo-mcp.js"></script>';
+    }
 		
 		// Build the page body.
 		$DSP->body = '<table border="0" cellspacing="0" cellpadding="0" style="width : 100%;">';
@@ -383,7 +389,7 @@ class Sl_developer_info_CP
 	 */	
 	function _display_jump_nav($items, $target = '')
 	{
-		global $DSP, $LANG, $EXT;
+		global $DSP, $LANG;
 		
 		$c = '';
 		
@@ -414,30 +420,6 @@ class Sl_developer_info_CP
 		$c .= $DSP->input_select_footer();
 		$c .= $DSP->input_submit($LANG->line('nav_go'));
 		$c .= '</div>' . $DSP->form_close();
-		
-		// If we have some jQuery to play with, we hijack the "jump-to" navigation.
-		if (isset($EXT->version_numbers['Cp_jquery']) === TRUE OR empty($SESS->cache['scripts']['jquery']) === FALSE)
-		{
-			$c .= <<<JSBLOCK
-<script type="text/javascript">
-
-	jQuery(document).ready(function() {					
-		jQuery('#sl-devinfo-jump-nav').submit(function() {
-			target = jQuery('#' + jQuery('#sl-devinfo-jump-to').val());
-			if (target.length) {
-				var offset = target.offset().top;
-				jQuery('html,body').animate({scrollTop: offset}, 1000);
-
-				return false;
-			}
-
-			return true;
-		});					
-	});
-
-</script>
-JSBLOCK;
-		}
 		
 		return $c;
 	}

@@ -120,67 +120,67 @@ class Sl_developer_info_CP
 	{
 		global $IN, $LANG, $PREFS;
 		
-    // Pre-flight checks.
-    $this->_perform_module_checks();
+    	// Pre-flight checks.
+    	$this->_perform_module_checks();
 		
 		// Initialise some variables.		
-		$this->short_base_url = 'C=modules' . AMP . 'M=' .$this->class_name. AMP;
-		$this->full_base_url 	= BASE . AMP . $this->short_base_url;
-		$this->site_id        = $PREFS->ini('site_id');
+		$this->short_base_url	= 'C=modules' .AMP .'M=' .$this->class_name. AMP;
+		$this->full_base_url	= BASE .AMP .$this->short_base_url;
+		$this->site_id			= $PREFS->ini('site_id');
 		
 		// The module top-level navigation items.
 		$this->nav = array(
 			array(
-				'page' 				=> 'templates',
-				'title' 			=> $LANG->line('nav_templates'),
+				'page' 			=> 'templates',
+				'title' 		=> $LANG->line('nav_templates'),
 				'section_id' 	=> SL_DEVINFO_TEMPLATES
-				),
+			),
 			array(
-				'page' 				=> 'weblogs',
-				'title' 			=> $LANG->line('nav_weblogs'),
+				'page' 			=> 'weblogs',
+				'title' 		=> $LANG->line('nav_weblogs'),
 				'section_id' 	=> SL_DEVINFO_WEBLOGS
-				),
+			),
 			array(
-				'page' 				=> 'files',
-				'title' 			=> $LANG->line('nav_files'),
+				'page' 			=> 'files',
+				'title' 		=> $LANG->line('nav_files'),
 				'section_id' 	=> SL_DEVINFO_FILES
-				),
+			),
 			array(
-				'page'				=> 'globals',
-				'title'				=> $LANG->line('nav_globals'),
+				'page'			=> 'globals',
+				'title'			=> $LANG->line('nav_globals'),
 				'section_id'	=> SL_DEVINFO_GLOBALS
-				),
+			),
 			array(
-			  'page'        => 'prefs',
-			  'title'       => $LANG->line('nav_prefs'),
-			  'section_id'  => SL_DEVINFO_PREFS
-			  )
-			);
+				'page'        	=> 'prefs',
+				'title'       	=> $LANG->line('nav_prefs'),
+				'section_id'  	=> SL_DEVINFO_PREFS
+			)
+		);
 			
 		// "Friendly" titles for the Template types.
-		$this->template_types = array(			
-			'css'				=> $LANG->line('template_type_css'),
-			'js'				=> $LANG->line('template_type_js'),
-			'rss'				=> $LANG->line('template_type_rss'),
-			'static'		=> $LANG->line('template_type_static'),
-			'webpage'		=> $LANG->line('template_type_webpage'),
-			'xml'				=> $LANG->line('template_type_xml')
-			);
+		$this->template_types = array(
+			'css'		=> $LANG->line('template_type_css'),
+			'js'		=> $LANG->line('template_type_js'),
+			'rss'		=> $LANG->line('template_type_rss'),
+			'static'	=> $LANG->line('template_type_static'),
+			'webpage'	=> $LANG->line('template_type_webpage'),
+			'xml'		=> $LANG->line('template_type_xml')
+		);
 			
 		// "Friendly" titles for the Weblog Field types.
 		$this->weblog_field_types = array(
-			'text'			=> $LANG->line('weblog_field_type_text'),
+			'text'		=> $LANG->line('weblog_field_type_text'),
 			'textarea'	=> $LANG->line('weblog_field_type_textarea'),
-			'select'		=> $LANG->line('weblog_field_type_select'),
-			'date'			=> $LANG->line('weblog_field_type_date'),
-			'rel'				=> $LANG->line('weblog_field_type_rel')			
-			);
+			'select'	=> $LANG->line('weblog_field_type_select'),
+			'date'		=> $LANG->line('weblog_field_type_date'),
+			'rel'		=> $LANG->line('weblog_field_type_rel')
+		);
 			
 		// "Friendly" titles for the File types.
 		$this->file_types = array(
-			'img'		=> $LANG->line('file_type_image'),
-			'all'		=> $LANG->line('file_type_all')		
-			);
+			'img'	=> $LANG->line('file_type_image'),
+			'all'	=> $LANG->line('file_type_all')
+		);
 		
 		// Display the appropriate page content.
 		if ($switch)
@@ -225,26 +225,28 @@ class Sl_developer_info_CP
 	 */
 	function _perform_module_checks()
 	{
-	  global $DB;
-    
-    $db_module = $DB->query("SELECT `module_version` FROM `exp_modules` WHERE `module_name` = '" .$this->class_name. "'");
-    
-    if ($db_module->num_rows !== 1)
-    {
-      return FALSE;
-    }
-    
-    // Update the version number, if required.
-    if ($db_module->row['module_version'] !== $this->version)
-    {
-      $DB->query($DB->update_string(
-        'exp_modules',
-        array('module_version' => $this->version),
-        "`module_name` = '" .$this->class_name. "'"
-        ));
-    }
-    
-    return TRUE;
+		global $DB;
+		
+		$db_module = $DB->query("SELECT `module_version`
+			FROM `exp_modules`
+			WHERE `module_name` = '" .$this->class_name. "'");
+		
+		if ($db_module->num_rows !== 1)
+		{
+			return FALSE;
+		}
+
+		// Update the version number, if required.
+		if ($db_module->row['module_version'] !== $this->version)
+		{
+			$DB->query($DB->update_string(
+				'exp_modules',
+				array('module_version' => $this->version),
+				"module_name = '" .$this->class_name. "'"
+			));
+		}
+		
+		return TRUE;
 	}
 	
 	
@@ -363,13 +365,13 @@ class Sl_developer_info_CP
 		$DSP->title = $title;
 		
 		// Include the custom CSS and JavaScript.
-    $DSP->extra_header .= '<link rel="stylesheet" type="text/css" media="screen" href="modules/' .strtolower($this->class_name). '/css/sl-devinfo-mcp.css">';
+		$DSP->extra_header .= '<link rel="stylesheet" type="text/css" media="screen" href="modules/' .strtolower($this->class_name). '/css/sl-devinfo-mcp.css">';
     
-    // Only include the JS if jQuery is installed.
-    if (isset($EXT->version_numbers['Cp_jquery']) === TRUE OR empty($SESS->cache['scripts']['jquery']) === FALSE)
-    {
-      $DSP->extra_header .= '<script type="text/javascript" src="modules/' .strtolower($this->class_name). '/js/sl-devinfo-mcp.js"></script>';
-    }
+		// Only include the JS if jQuery is installed.
+		if (isset($EXT->version_numbers['Cp_jquery']) === TRUE OR empty($SESS->cache['scripts']['jquery']) === FALSE)
+		{
+			$DSP->extra_header .= '<script type="text/javascript" src="modules/' .strtolower($this->class_name). '/js/sl-devinfo-mcp.js"></script>';
+		}
 		
 		// Build the page body.
 		$DSP->body = '<table border="0" cellspacing="0" cellpadding="0" style="width : 100%;" id="';
@@ -380,7 +382,6 @@ class Sl_developer_info_CP
 		$DSP->body .= $this->_generate_nav($section);
 		
 		$DSP->body .= '<td class="default" style="width : 8px;"></td>';
-		
 		$DSP->body .= '<td valign="top" id="sl-content-a">';
 		$DSP->body .= $this->_generate_donate_button();
 		$DSP->body .= $content;
@@ -705,9 +706,9 @@ class Sl_developer_info_CP
 		
 		$c = '';
 		
-		$img_root			= '<img border="0" alt="" title="" height="14" src="' . $PREFS->ini('theme_folder_url', 1) . 'cp_global_images/';
-		$nested_arrow = $img_root . 'cat_marker.gif" width="18" />';
-		$spacer				= $img_root . 'clear.gif" width="24" />';
+		$img_root		= '<img border="0" alt="" title="" height="14" src="' . $PREFS->ini('theme_folder_url', 1) . 'cp_global_images/';
+		$nested_arrow 	= $img_root . 'cat_marker.gif" width="18" />';
+		$spacer			= $img_root . 'clear.gif" width="24" />';
 		$thin_spacer	= $img_root . 'clear.gif" width="1" />';
 		
 		$cats = $DB->query("SELECT cat_id, cat_name, parent_id
@@ -1231,6 +1232,8 @@ class Sl_developer_info_CP
 		$c .= $DSP->table_qcell($td_style, $LANG->line('file_location_id'));
 		$c .= $DSP->table_qcell($td_style, $LANG->line('file_location_name'));
 		$c .= $DSP->table_qcell($td_style, $LANG->line('file_location_path'));
+		$c .= $DSP->table_qcell($td_style, $LANG->line('file_location_valid'));
+		$c .= $DSP->table_qcell($td_style, $LANG->line('file_location_writeable'));
 		$c .= $DSP->table_qcell($td_style, $LANG->line('file_location_url'));
 		$c .= $DSP->table_qcell($td_style, $LANG->line('file_location_types'));
 		$c .= $DSP->table_qcell($td_style, $LANG->line('file_location_size'));
@@ -1243,12 +1246,18 @@ class Sl_developer_info_CP
 			$td_style = ($row++ % 2) ? 'tableCellOne' : 'tableCellTwo';
 			
 			$edit_prefs = BASE . AMP . 'C=admin' . AMP . 'M=blog_admin' . AMP . 'P=edit_upload_pref' . AMP . 'id=' . $loc['id'];
+			
+			// Is the server path valid and writeable?
+			$valid = is_dir($loc['server_path']) ? $LANG->line('yes') : $LANG->line('no');
+			$writeable = is_writable($loc['server_path']) ? $LANG->line('yes') : $LANG->line('no');
 					
 			$c .= $DSP->tr();
-			$c .= $DSP->table_qcell($td_style, $loc['id']);						// ID.
-			$c .= $DSP->table_qcell($td_style, $DSP->anchor($edit_prefs, $loc['name']));	// Name.
-			$c .= $DSP->table_qcell($td_style, $loc['server_path']);	// Server Path.
-			$c .= $DSP->table_qcell($td_style, $loc['url']);					// URL.
+			$c .= $DSP->table_qcell($td_style, $loc['id']);
+			$c .= $DSP->table_qcell($td_style, $DSP->anchor($edit_prefs, $loc['name']));
+			$c .= $DSP->table_qcell($td_style, $loc['server_path']);
+			$c .= $DSP->table_qcell($td_style, $valid);
+			$c .= $DSP->table_qcell($td_style, $writeable);
+			$c .= $DSP->table_qcell($td_style, $loc['url']);
 			
 			// Allowed Types.
 			if (isset($this->file_types[$loc['allowed_types']]))

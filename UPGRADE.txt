@@ -1,0 +1,8 @@
+UPGRADE INSTRUCTIONS from 1.4.6 to 1.5
+
+1) Delete these files and folders:
+		**/system/modules/modules/sl_developer_info/css/
+		**/system/modules/modules/sl_developer_info/js/
+		**/system/modules/modules/sl_developer_info/img/
+
+2) Upload new files

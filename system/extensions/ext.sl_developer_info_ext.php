@@ -1,18 +1,14 @@
-<?php
+<?php if ( ! defined('EXT')) exit('Invalid file request');
 
 /**
- * @package SL Developer Info
- * @version 1.4.5
- * @author Stephen Lewis (http://www.experienceinternet.co.uk/)
- * @copyright Copyright (c) 2009, Stephen Lewis
- * @license http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons Attribution-Share Alike 3.0 Unported
- * @link http://www.experienceinternet.co.uk/resources/details/sl-developer-info/
-*/
-
-if ( ! defined('EXT'))
-{
-	exit('Invalid file request');
-}
+ * SL Developer Info extension.
+ *
+ * @author              Stephen Lewis (http://experienceinternet.co.uk)
+ * @author              Marc Miller (http://bigoceanstudion.com)
+ * @copyright           Experience Internet
+ * @link                http://experienceinternet.co.uk/software/sl-developer-info/
+ * @package             Sl_developer_info
+ */
 
 if ( ! defined('SL_DEVINFO_EXT_NAME'))
 {
@@ -24,40 +20,11 @@ if ( ! defined('SL_DEVINFO_EXT_NAME'))
 
 class Sl_developer_info_ext {
 	
-	/**
-	 * Extension settings.
-	 * @var array
-	 */
    var $settings        = array();
-
-	/**
-	 * Extension name.
-	 * @var string
-	 */
    var $name            = SL_DEVINFO_EXT_NAME;
-
-	/**
-	 * Extension version.
-	 * @var string
-	 */
    var $version         = SL_DEVINFO_EXT_VERSION;
-
-	/**
-	 * Extension description.
-	 * @var string
-	 */
    var $description     = 'Auto-update settings for the SL Developer Info module.';
-
-	/**
-	 * If $settings_exist = 'y', the settings page will be displayed in EE admin.
-	 * @var string
-	 */
    var $settings_exist  = 'y';
-
-	/**
-	 * Link to extension documentation.
-	 * @var string
-	 */
    var $docs_url        = SL_DEVINFO_EXT_DOCS;
 
 
@@ -329,4 +296,5 @@ class Sl_developer_info_ext {
 				
 }
 
-?>
+/* End of file      : ext.sl_developer_info_ext.php */
+/* File location    : system/extensions/ext.sl_developer_info_ext.php */

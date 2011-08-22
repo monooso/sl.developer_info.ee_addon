@@ -2,7 +2,7 @@
 
 /**
  * @package SL Developer Info
- * @version 1.4.5
+ * @version 1.5
  * @author Stephen Lewis (http://experienceinternet.co.uk/)
  * @copyright Copyright (c) 2009, Stephen Lewis
  * @license http://creativecommons.org/licenses/by-sa/3.0 Creative Commons Attribution-Share Alike 3.0 Unported
@@ -21,8 +21,8 @@ class Sl_developer_info
 	 * @var return_data
 	 */
 	var $return_data = '';
-	
-	
+
+
 	/**
 	 * PHP4 constructor.
 	 * @see __construct
@@ -31,15 +31,15 @@ class Sl_developer_info
 	{
 		$this->__construct();
 	}
-	
-	
+
+
 	/**
 	 * PHP5 constructor.
 	 */
 	function __construct()
 	{
 		$this->return_data = '';
-	}	
+	}
 }
 
 ?>

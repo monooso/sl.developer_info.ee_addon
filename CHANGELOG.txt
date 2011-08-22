@@ -1,0 +1,133 @@
+1.5 (updated July 19, 2011 by Marc Miller, marc@bigoceanstudios.com)
+
+	The purpose of most of these changes was to beef up the Weblogs page to show me as much information as possible. I've found these additions really helpful in providing me with better information as I prepare a site to upgrade from EE1 to EE2. These things are also really useful when dealing with a MSM site.
+
+	Made MSM compatible
+		-moved stylesheets and scripts to themes directory for MSM compatibility.
+		-if MSM is installed, display current Site ID in the Side Navigation
+
+	Added Side Navigation links/items
+		-to Modules
+		-to Extenstions
+		-to Plugins
+		-to Field Groups page
+		-if FieldFrame is installed, to FieldFrame settings
+		-if Wygwam is installed, to Wygwam config page
+
+		-on Weblogs Page - added a box of all the Custom Field types that are in use (to check if there is a rogue Field type that won't be EE2 compatible)
+		  - there does appear to be a slight bug in this feature. If you create a Matrix Custom Field and then delete it, the Matrix columns do not get deleted out of the Matrix table. So those orphan Matrix field types will show up here.
+
+	Weblogs Page enhancements
+		Main Header - added a link to view all the entries in that weblog
+		Sub Header	- added jquery collapsible items to the Categories and Status groups
+								- added the default field group name (and link) that is assigned to that weblog
+		Footer			- added 2 textareas with an auto-created MySql query (hidden by default) for that weblog. Useful when you need to alter all the entries in that weblog in PHPMyAdmin.
+		Weblog Body	-	added Searchable? column
+								-	added Field Group column - useful to determine where the Gypsy fields are located separate from the assigned Field Group
+								- if the Type is Wygwam, the Wygwam Config name will display with link to config page
+								- added Directory/Matrix cols column
+										- displays and links to File Upload Directory for:
+												-MH File
+												-NGen File Field
+												-MX Universal Editor
+												-Wygwam
+										- if Matrix is installed, displays each of the columns (with column ID) in that Matrix table
+												- also displays upload directory if Wygwam, MX Universal Editor, or NGen file in Matrix column
+
+	Other Fixes
+	  renamed donate button CSS class to avoid conflicts with other extensions.
+	  added back the active class
+
+
+1.4.6 (released 1st October, 2009)
+
+  Added category group ID, once again thanks to a Tweet from Eric.
+  Moved JavaScript and CSS to external files.
+  Added “Donate” button.
+  Made preparations to retire to my own tropical island.
+
+1.4.5 (released 16th September, 2009)
+
+  Reduced queries and improved performance in _display_weblogs method. Also improved display of custom FieldFrame fieldtype names.
+
+1.4.4 (released 29th July, 2009)
+
+  Implemented support for FieldFrame fields in Weblogs section.
+
+1.4.3 (released 21st May, 2009)
+
+  Fixed bug in Weblogs section affecting sites without Gypsy installed.
+
+1.4.2 (released 21st May, 2009)
+
+  Implemented support for Gypsy fields in Weblogs section.
+
+1.4.1 (released 21st May, 2009)
+
+  Added code to sort the $PREFS properties by index.
+
+1.4.0 (released 21st May, 2009)
+
+  Added “$PREFS Object” section, for all you frustrated add-on developers out there. Actually it was mostly for me, but you might like it.
+
+1.3.3 (released 10th May, 2009)
+
+  Added convenience link to Field Group editor from Weblogs screen.
+
+1.3.2 (released 4th May, 2009)
+
+  Minor PHP4 compatibility updates.
+
+1.3.1 (released 8th April, 2009)
+
+  Added weblog ID, at Eric’s behest.
+
+1.3.0 (released 2nd April, 2009)
+
+  Implemented Multi Site Manager support.
+
+1.2.0 (released 11th March, 2009)
+
+  Fixed ordering of categories and custom field.
+  Implemented category nesting, to accurately display category parent-child relationships.
+  Added “Global Variables” section.
+  Implemented “jump to” navigation on Templates and Weblogs pages, to facilitate easier in-page navigation.
+
+1.1.1 (released 26th February, 2009)
+
+  Implemented code to handle weblogs with multiple category groups.
+  Added version number to module homepage title.
+  Tweaked layout of Weblogs page.
+
+1.1.0 (released 25th February, 2009)
+
+General updates:
+
+  Created extension, and implemented LG Addon Updater code.
+
+Templates page updates:
+
+  Added link to manage preferences for each Template Group.
+  Linked each Template directly to the template editor.
+
+Weblogs page updates:
+
+  Added weblog field IDs.
+  Added weblog field format information.
+  Improved handling of non-standard weblog field types.
+  Added link to manage preferences for each weblog.
+  Added link to manage groups for each weblog.
+  Added link to manage categories for each weblog.
+  Added link to manage statuses for each weblog.
+
+Templates page updates:
+
+  Linked each field directly to the field editor.
+
+File Upload Locations page updates:
+
+  Linked each File Upload Location directly to the file upload preferences editor.
+
+1.0.0 (released 24th February, 2009)
+
+  Initial release.

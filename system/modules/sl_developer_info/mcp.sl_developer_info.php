@@ -1,18 +1,20 @@
 <?php
 
 /**
- * @package SL Developer Info
- * @version 1.5
- * @author Stephen Lewis (http://experienceinternet.co.uk/) & Marc Miller (http://bigoceanstudios.com)
- * @copyright Copyright (c) 2009, Stephen Lewis
- * @license http://creativecommons.org/licenses/by-sa/3.0 Creative Commons Attribution-Share Alike 3.0 Unported
- * @link http://experienceinternet.co.uk/resources/details/sl-developer-info/
+ * SL Developer Info module control panel.
+ *
+ * @author              Stephen Lewis (http://experienceinternet.co.uk)
+ * @author              Marc Miller (http://bigoceanstudion.com)
+ * @copyright           Experience Internet
+ * @link                http://experienceinternet.co.uk/software/sl-developer-info/
+ * @package             Sl_developer_info
+ * @version             1.5.1
 */
 
 if ( ! defined('SL_DEVINFO_NAME'))
 {
 	define('SL_DEVINFO_NAME', 'SL Developer Info');
-	define('SL_DEVINFO_VERSION', '1.5');
+	define('SL_DEVINFO_VERSION', '1.5.1');
 	define('SL_DEVINFO_CLASS', 'Sl_developer_info');
 
 	// Navigation constants.
@@ -25,81 +27,15 @@ if ( ! defined('SL_DEVINFO_NAME'))
 
 class Sl_developer_info_CP
 {
-	/**
-	 * The module version (required variable).
-	 *
-	 * @access  private
-	 * @var     string
-	 */
-	var $version = SL_DEVINFO_VERSION;
-
-	/**
-	 * The module class name.
-	 *
-	 * @access  private
-	 * @var     string
-	 */
-	var $class_name = SL_DEVINFO_CLASS;
-
-	/**
-	 * The short "base" used when constructing Control Panel URLs.
-	 *
-	 * @access 	private
-	 * @var 	  string
-	 */
-	var $short_base_url = '';
-
-	/**
-	 * The full "base" used when constructing Control Panel URLs.
-	 *
-	 * @access	private
-	 * @var 		string
-	 */
-	var $full_base_url = '';
-
-	/**
-	 * An array containing details of the module navigation.
-	 *
-	 * @access	private
-	 * @var 		array
-	 */
-	var $nav = array();
-
-
-	/**
-	 * An array containing "friendly" titles for the Template types.
-	 *
-	 * @access	private
-	 * @var 		array
-	 */
-	var $template_types = array();
-
-
-	/**
-	 * An array containing "friendly" titles for the Weblog Field types.
-	 *
-	 * @access	private
-	 * @var 		array
-	 */
+	var $version            = SL_DEVINFO_VERSION;
+	var $class_name         = SL_DEVINFO_CLASS;
+	var $short_base_url     = '';
+	var $full_base_url      = '';
+	var $nav                = array();
+	var $template_types     = array();
 	var $weblog_field_types = array();
-
-
-	/**
-	 * An array containing "friendly" titles for the File types.
-	 *
-	 * @access	private
-	 * @var 		array
-	 */
-	var $file_types = array();
-
-
-	/**
-	 * The site ID.
-	 *
-	 * @access  private
-	 * @var     int
-	 */
-	var $site_id = 1;
+	var $file_types         = array();
+	var $site_id            = 1;
 
 
 	/**
@@ -120,13 +56,14 @@ class Sl_developer_info_CP
 	{
 		global $IN, $LANG, $PREFS;
 
-    // Pre-flight checks.
-    $this->_perform_module_checks();
+        // Pre-flight checks.
+        $this->_perform_module_checks();
 
 		// Initialise some variables.
 		$this->short_base_url = 'C=modules' . AMP . 'M=' . $this->class_name. AMP;
 		$this->full_base_url 	= BASE . AMP . $this->short_base_url;
 		$this->site_id        = $PREFS->ini('site_id');
+
 		//BOS create an Admin URL base
 		$this->admin_url = BASE . AMP;
 

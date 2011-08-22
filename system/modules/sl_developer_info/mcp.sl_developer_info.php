@@ -492,7 +492,7 @@ class Sl_developer_info_CP
 	 */
 	function _generate_ui($section = '', $title = '', $content = '', $body_id = '')
 	{
-		global $DSP, $EXT, $LANG, $SESS, $PREFS;
+		global $DSP, $EXT, $FNS, $LANG, $SESS, $PREFS;
 
 		if ($body_id !== '')
 		{
@@ -504,13 +504,15 @@ class Sl_developer_info_CP
 
 		// Include the custom CSS and JavaScript.
 		// BOS we need to be kind to those using admin.php in a MSM setting. We had to move these files to the themes directory.
-  	$DSP->extra_header .= '<link rel="stylesheet" type="text/css" media="screen" href="' . ($PREFS->ini('theme_folder_url')) . '/third_party/' 	.strtolower($this->class_name). '/sl-devinfo-mcp.css">';
-  	// Only include the JS if jQuery is installed.
-		// BOS are we using admin.php in a MSM setting? Then lets load the files from the base site.
-    if (isset($EXT->version_numbers['Cp_jquery']) === TRUE OR empty($SESS->cache['scripts']['jquery']) === FALSE)
-    {
-      $DSP->extra_header .= '<script type="text/javascript" src="' . ($PREFS->ini('theme_folder_url')) . '/third_party/' .strtolower($this->class_name). '/sl-devinfo-mcp.js"></script>';
-    }
+        $theme_url = $FNS->remove_double_slashes($PREFS->ini('theme_folder_url') .'/cp_themes/default/' .strtolower($this->class_name) .'/');
+
+        $DSP->extra_header .= '<link rel="stylesheet" type="text/css" media="screen" href="' .$theme_url .'sl-devinfo-mcp.css">';
+
+        // Only include the JS if jQuery is installed.
+        if (isset($EXT->version_numbers['Cp_jquery']) === TRUE OR empty($SESS->cache['scripts']['jquery']) === FALSE)
+        {
+            $DSP->extra_header .= '<script type="text/javascript" src="' .$theme_url .'sl-devinfo-mcp.js"></script>';
+        }
 
 		// Build the page body.
 		$DSP->body = '<table border="0" cellspacing="0" cellpadding="0" style="width : 100%;" id="';
@@ -552,7 +554,7 @@ class Sl_developer_info_CP
 				'action'	=> $target,
 				'method'	=> 'post',
 				'name'		=> 'sl-devinfo-jump-nav',
-				'id'			=> 'sl-devinfo-jump-nav',
+				'id'		=> 'sl-devinfo-jump-nav',
 				'style'		=> 'margin : 0.5em 0'
 				)
 			);
@@ -848,9 +850,9 @@ class Sl_developer_info_CP
 
 		$c = '';
 
-		$img_root			= '<img border="0" alt="" title="" height="14" src="' . $PREFS->ini('theme_folder_url', 1) . 'cp_global_images/';
+		$img_root		= '<img border="0" alt="" title="" height="14" src="' . $PREFS->ini('theme_folder_url', 1) . 'cp_global_images/';
 		$nested_arrow = $img_root . 'cat_marker.gif" width="18" />';
-		$spacer				= $img_root . 'clear.gif" width="24" />';
+		$spacer			= $img_root . 'clear.gif" width="24" />';
 		$thin_spacer	= $img_root . 'clear.gif" width="1" />';
 
 		$cats = $DB->query("SELECT cat_id, cat_name, parent_id

@@ -12,8 +12,8 @@ padding-top : 0;
 
 #sl-content-a table {clear : right;}
 
-#sl-content-a .donate {
-background : #EBE350 url(../img/donate-bg.png) no-repeat 0 50%;
+#sl-content-a .sl-donate {
+background : #EBE350 url(donate-bg.png) no-repeat 0 50%;
 border : 1px solid #EED5C6;
 border-bottom-color : #DCAC8D;
 border-top-color : #FFF;
@@ -25,7 +25,7 @@ margin-bottom : 10px;
 -webkit-box-shadow : 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
-#sl-content-a .donate a {
+#sl-content-a .sl-donate a {
 color : #000;
 display : block;
 font : bold 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -35,7 +35,12 @@ text-shadow : 0 1px 0 rgba(255, 255, 255, 0.75);
 -webkit-border-radius : 6px;
 }
 
-#home #sl-content-a .donate {
+#home #sl-content-a .sl-donate {
 margin-right : 15px;
 margin-top : 10px;
 }
+.navPad {padding-left:2px;}
+.active {background-color:#E1EAF1;}
+/*BOS categories and status styles;*/
+.sl-categories-link, .sl-status-link, .sl-query-link, .sl-full-query-link {color:#6F7478;cursor:pointer;}
+.sl-hidden {display:none;}
